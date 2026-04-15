@@ -3,5 +3,22 @@
   "owner": {
     "name": "Apliteni"
   },
-  "plugins": []
+  "plugins": [
+    {
+      "name": "clickup",
+      "source": {
+        "source": "github",
+        "repo": "apliteni/claude-clickup-plugin"
+      },
+      "description": "ClickUp workflows across Apliteni workspaces"
+    },
+    {
+      "name": "lessly",
+      "source": {
+        "source": "github",
+        "repo": "lessly-hub/claude-lessly-plugin"
+      },
+      "description": "Lessly product, DX, and platform tooling"
+    }
+  ]
 }
