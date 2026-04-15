@@ -15,5 +15,5 @@ jobs:
             .claude-plugin/marketplace.json
       - name: Validate each plugin entry has required fields
         run: |
-          jq -e '.plugins[] | .name and .source and .description' \
+          jq -e 'all(.plugins[]; .name and .source and .description)' \
             .claude-plugin/marketplace.json
