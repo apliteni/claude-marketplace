@@ -5,12 +5,12 @@
   },
   "plugins": [
     {
-      "name": "clickup",
+      "name": "hub",
       "source": {
         "source": "github",
-        "repo": "apliteni/claude-clickup-plugin"
+        "repo": "apliteni/claude-hub-plugin"
       },
-      "description": "ClickUp workflows across Apliteni workspaces"
+      "description": "Apliteni company workflows — AORs, OKRs, RFCs, handbook, playbook, strategy, chats"
     },
     {
       "name": "lessly",
