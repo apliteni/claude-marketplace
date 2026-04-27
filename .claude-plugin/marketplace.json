@@ -5,12 +5,12 @@
   },
   "plugins": [
     {
-      "name": "hub",
+      "name": "apliteni",
       "source": {
         "source": "github",
-        "repo": "apliteni/claude-hub-plugin"
+        "repo": "apliteni/claude-apliteni-plugin"
       },
-      "description": "Apliteni company workflows — AORs, OKRs, RFCs, handbook, playbook, strategy, chats"
+      "description": "Apliteni company workflows — AORs, OKRs, RFCs, handbook, playbook, strategy, chats, work-tools, xaas"
     },
     {
       "name": "lessly",
