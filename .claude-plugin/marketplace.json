@@ -13,6 +13,14 @@
       "description": "Apliteni company workflows — AORs, OKRs, RFCs, handbook, playbook, strategy, chats, work-tools, xaas"
     },
     {
+      "name": "compliance",
+      "source": {
+        "source": "github",
+        "repo": "apliteni/claude-compliance-plugin"
+      },
+      "description": "EU SaaS compliance AOR — legal-copilot skill for GDPR, AML/KYC, NIS2, LEA verification, and regulatory analysis"
+    },
+    {
       "name": "lessly",
       "source": {
         "source": "github",
