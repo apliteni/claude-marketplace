@@ -58,7 +58,13 @@ for (const target of repos) {
 }
 
 console.log(`Done. sent=${sent} failed=${failed}`)
-if (failed > 0) process.exit(1)
+// Tolerate per-repo failures (e.g. PAT lacks access to a foreign-org repo) as
+// long as at least one event landed. Hard-fail only when nothing got through,
+// which signals a broken PostHog ingest or a broken PAT for every repo.
+if (sent === 0) {
+  console.error('No events sent — credentials or ingest likely broken.')
+  process.exit(1)
+}
 
 async function fetchTraffic(repo, kind) {
   const url = `https://api.github.com/repos/${repo}/traffic/${kind}`
