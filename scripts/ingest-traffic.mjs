@@ -6,18 +6,25 @@
 // with `max(count) GROUP BY repo, date`.
 //
 // Required env:
-//   TRAFFIC_PAT              GitHub PAT with push access on every targeted repo
+//   TRAFFIC_PAT              GitHub PAT with push access on every apliteni-org targeted repo
 //   POSTHOG_API_KEY          PostHog project API key (phc_...)
 //   POSTHOG_HOST             e.g. https://eu.posthog.com or https://us.posthog.com
 // Optional env:
+//   TRAFFIC_PAT_LESSLY       Separate PAT for lessly-hub-owned repos. Falls back to TRAFFIC_PAT
+//                            (which will 404 for foreign-org repos) when unset.
 //   MARKETPLACE_REPO         default: apliteni/claude-marketplace (the repo this script lives in)
 
 import { readFile } from 'node:fs/promises'
 
 const TRAFFIC_PAT = required('TRAFFIC_PAT')
+const TRAFFIC_PAT_LESSLY = process.env.TRAFFIC_PAT_LESSLY || TRAFFIC_PAT
 const POSTHOG_API_KEY = required('POSTHOG_API_KEY')
 const POSTHOG_HOST = required('POSTHOG_HOST').replace(/\/+$/, '')
 const MARKETPLACE_REPO = process.env.MARKETPLACE_REPO || 'apliteni/claude-marketplace'
+
+function patFor(repo) {
+  return repo.startsWith('lessly-hub/') ? TRAFFIC_PAT_LESSLY : TRAFFIC_PAT
+}
 
 function required(name) {
   const v = process.env[name]
@@ -70,7 +77,7 @@ async function fetchTraffic(repo, kind) {
   const url = `https://api.github.com/repos/${repo}/traffic/${kind}`
   const res = await fetch(url, {
     headers: {
-      Authorization: `Bearer ${TRAFFIC_PAT}`,
+      Authorization: `Bearer ${patFor(repo)}`,
       Accept: 'application/vnd.github+json',
       'X-GitHub-Api-Version': '2022-11-28',
     },
