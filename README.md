@@ -37,11 +37,11 @@ Open a PR updating `.claude-plugin/marketplace.json` with a new entry. CI valida
 
 ## Telemetry
 
-A daily GitHub Action (`.github/workflows/traffic-telemetry.yml`) pulls clone + view counts from the GitHub Traffic API for the marketplace and every listed plugin repo, and forwards them to PostHog as `plugin_repo_clones` / `plugin_repo_views` events. Source: [issue #7](https://github.com/apliteni/claude-marketplace/issues/7).
+Two surfaces feed the Apliteni PostHog project:
 
-Required repo secrets:
-- `TRAFFIC_PAT` — fine-grained PAT with `Administration: Read` on the marketplace and every plugin repo listed in `marketplace.json`.
-- `POSTHOG_API_KEY` — project API key (`phc_…`) from the `Apliteni` PostHog org, `plugin-telemetry` project.
-- `POSTHOG_HOST` — e.g. `https://eu.posthog.com`.
+- **Phase 1** — daily GitHub Action (`.github/workflows/traffic-telemetry.yml`) pulls clones + views from the Traffic API for the marketplace and every listed plugin repo. Captures successful clones only.
+- **Phase 2** — `SessionStart` hook inside each plugin sends one anonymous event per UTC day. Closes the gap that Phase 1 can't see (clones happened but installs didn't run).
 
-Captures successful clones only — failed clones (e.g. private repo, missing org access) leave no trace in the Traffic API. An opt-in plugin telemetry hook (Phase 2) will surface successful first-runs so we can detect "clones happened but installs didn't" divergence.
+Required repo secrets: `TRAFFIC_PAT`, `POSTHOG_API_KEY`, `POSTHOG_HOST`. Source values from 1Password (apliteni account, `Employee` vault).
+
+Full setup runbook — including how to port the hook to a new plugin and how to add a new tracked repo — in [`docs/telemetry-setup.md`](docs/telemetry-setup.md). Source issue: [#7](https://github.com/apliteni/claude-marketplace/issues/7).
