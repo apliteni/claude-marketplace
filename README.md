@@ -34,3 +34,14 @@ If a plugin has been renamed and `/plugin install` says `Repository not found`, 
 ## Adding a plugin
 
 Open a PR updating `.claude-plugin/marketplace.json` with a new entry. CI validates the file. One approving review required. See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for naming rules.
+
+## Telemetry
+
+A daily GitHub Action (`.github/workflows/traffic-telemetry.yml`) pulls clone + view counts from the GitHub Traffic API for the marketplace and every listed plugin repo, and forwards them to PostHog as `plugin_repo_clones` / `plugin_repo_views` events. Source: [issue #7](https://github.com/apliteni/claude-marketplace/issues/7).
+
+Required repo secrets:
+- `TRAFFIC_PAT` — fine-grained PAT with `Administration: Read` on the marketplace and every plugin repo listed in `marketplace.json`.
+- `POSTHOG_API_KEY` — project API key (`phc_…`) from the `Apliteni` PostHog org, `plugin-telemetry` project.
+- `POSTHOG_HOST` — e.g. `https://eu.posthog.com`.
+
+Captures successful clones only — failed clones (e.g. private repo, missing org access) leave no trace in the Traffic API. An opt-in plugin telemetry hook (Phase 2) will surface successful first-runs so we can detect "clones happened but installs didn't" divergence.
