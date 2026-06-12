@@ -43,7 +43,8 @@ What each phase answers:
 
 | Secret | Source | What it does |
 |---|---|---|
-| `TRAFFIC_PAT` | 1Password: `Employee/claude-marketplace-pat` (account `apliteni.1password.com`) | Fine-grained PAT with `Administration: Read` on every targeted repo. Used by the daily Action. |
+| `TRAFFIC_PAT` | 1Password: `Employee/claude-marketplace-pat` (account `apliteni.1password.com`) | Fine-grained PAT with `Administration: Read` on every apliteni-org targeted repo. Used by the daily Action. |
+| `TRAFFIC_PAT_LESSLY` | 1Password: `Employee/claude-marketplace-pat-lessly` | Fine-grained PAT with `Administration: Read` on `lessly-hub/claude-lessly-plugin`. The script dispatches by repo owner: `lessly-hub/*` uses this PAT, everything else uses `TRAFFIC_PAT`. Optional — when unset, the script falls back to `TRAFFIC_PAT` (which 404s for foreign-org repos). |
 | `POSTHOG_API_KEY` | 1Password: `Employee/posthog-apliteni-project-token` | Project ingest key (`phc_…`). Public-by-design — embedded in the plugin hook script too. |
 | `POSTHOG_HOST` | Plain string `https://eu.posthog.com` | PostHog Cloud EU base URL. |
 
@@ -54,7 +55,7 @@ Set with `gh secret set <NAME> --repo apliteni/claude-marketplace`. Values flow 
 The Action reads the plugin list from `.claude-plugin/marketplace.json` plus the marketplace repo itself. To start tracking a new plugin:
 
 1. Add the plugin entry to `marketplace.json` (the existing CI catches missing fields).
-2. Ensure `TRAFFIC_PAT` has `Administration: Read` on the new repo. If the repo is in a different GitHub org (e.g. `lessly-hub`), the current PAT will 404 — see [Lessly gap](#lessly-gap) below.
+2. Ensure `TRAFFIC_PAT` (or `TRAFFIC_PAT_LESSLY` for `lessly-hub/*`) has `Administration: Read` on the new repo. For a third org, see [Cross-org repos (multi-PAT)](#cross-org-repos-multi-pat) below.
 3. Merge. Next 09:00 UTC cron picks it up. Manual trigger: `gh workflow run "Traffic telemetry" --repo apliteni/claude-marketplace --ref main`.
 
 ## Phase 2 — add the SessionStart hook to a new plugin
@@ -84,17 +85,19 @@ WHERE event = 'plugin_install_first_run' AND properties.plugin = '<new-plugin-na
 GROUP BY event, plugin
 ```
 
-## Lessly gap
+## Cross-org repos (multi-PAT)
 
-`lessly-hub/claude-lessly-plugin` lives in a different GitHub org. The Apliteni-scoped PAT cannot read its traffic, so Phase 1 logs the two 404s and continues (zero-event runs would hard-fail; partial success goes green per the [#9 fix](https://github.com/apliteni/claude-marketplace/pull/9)).
-
-To close the gap: mint a separate fine-grained PAT in `lessly-hub` with `Administration: Read`, store as repo secret `TRAFFIC_PAT_LESSLY`, then teach `scripts/ingest-traffic.mjs` to dispatch by repo owner — pseudocode:
+A single fine-grained PAT can only target repos in one GitHub org. Today the script handles two orgs: `apliteni/*` (via `TRAFFIC_PAT`) and `lessly-hub/*` (via `TRAFFIC_PAT_LESSLY`). Dispatch is in `scripts/ingest-traffic.mjs`:
 
 ```js
-const tokenForRepo = (repo) => repo.startsWith('lessly-hub/')
-  ? process.env.TRAFFIC_PAT_LESSLY
-  : process.env.TRAFFIC_PAT
+function patFor(repo) {
+  return repo.startsWith('lessly-hub/') ? TRAFFIC_PAT_LESSLY : TRAFFIC_PAT
+}
 ```
+
+To add a third org (e.g. a future `<other-org>/<plugin-repo>` in `marketplace.json`): mint a PAT in that org with `Administration: Read`, store as `TRAFFIC_PAT_<ORG>` repo secret, extend `patFor()` with a new branch, and add the env mapping in `.github/workflows/traffic-telemetry.yml`.
+
+When `TRAFFIC_PAT_LESSLY` is unset, the script falls back to `TRAFFIC_PAT` — which 404s for foreign-org repos but doesn't break anything else (per the [#9 fix](https://github.com/apliteni/claude-marketplace/pull/9), partial success goes green).
 
 ## Switching the PostHog MCP to the Apliteni project
 

@@ -25,6 +25,7 @@ jobs:
       - name: Ingest traffic to PostHog
         env:
           TRAFFIC_PAT: ${{ secrets.TRAFFIC_PAT }}
+          TRAFFIC_PAT_LESSLY: ${{ secrets.TRAFFIC_PAT_LESSLY }}
           POSTHOG_API_KEY: ${{ secrets.POSTHOG_API_KEY }}
           POSTHOG_HOST: ${{ secrets.POSTHOG_HOST }}
         run: node scripts/ingest-traffic.mjs
