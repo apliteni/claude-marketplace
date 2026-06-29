@@ -27,6 +27,14 @@
         "repo": "lessly-hub/claude-lessly-plugin"
       },
       "description": "Lessly product, DX, and platform tooling"
+    },
+    {
+      "name": "compliance-audit",
+      "source": {
+        "source": "github",
+        "repo": "apliteni/claude-compliance-audit-plugin"
+      },
+      "description": "Compliance audit skill — full L1–L4 framework generator for any product and domain (Sanctions, GDPR, VAT, AI Act, Employment)"
     }
   ]
 }
