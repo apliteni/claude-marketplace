@@ -21,6 +21,14 @@
       "description": "EU SaaS compliance AOR — legal-copilot skill for GDPR, AML/KYC, NIS2, LEA verification, and regulatory analysis"
     },
     {
+      "name": "compliance-audit",
+      "source": {
+        "source": "github",
+        "repo": "apliteni/claude-compliance-audit-plugin"
+      },
+      "description": "Full L1–L4 compliance framework generator for any Apliteni product and domain (Sanctions, GDPR, VAT, AI Act, Employment)"
+    },
+    {
       "name": "lessly",
       "source": {
         "source": "github",
