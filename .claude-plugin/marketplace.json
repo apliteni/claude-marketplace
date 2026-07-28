@@ -26,7 +26,15 @@
         "source": "github",
         "repo": "lessly-hub/claude-lessly-plugin"
       },
-      "description": "Lessly product, DX, and platform tooling"
+      "description": "Lessly product & brand — design system, voice, and the AI-slop gate"
+    },
+    {
+      "name": "lessly-app-dev",
+      "source": {
+        "source": "github",
+        "repo": "lessly-hub/claude-lessly-app-dev-plugin"
+      },
+      "description": "Lessly app & extension engineering — scaffolding, local dev, and DoD audit skills"
     }
   ]
 }
