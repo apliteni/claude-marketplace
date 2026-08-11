@@ -35,6 +35,14 @@
         "repo": "lessly-hub/claude-lessly-app-dev-plugin"
       },
       "description": "Lessly app & extension engineering — scaffolding, local dev, and DoD audit skills"
+    },
+    {
+      "name": "gtm-intake",
+      "source": {
+        "source": "github",
+        "repo": "apliteni/claude-gtm-intake-plugin"
+      },
+      "description": "GTM intake for new product launches — validates problem, workarounds, competitors and hypotheses before opening a ClickUp task for brand-comm, plus an approve handoff to Artur. Uses the employee's own connected ClickUp MCP; no bundled ClickUp integration."
     }
   ]
 }
