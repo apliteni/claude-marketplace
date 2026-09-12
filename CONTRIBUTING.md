@@ -2,30 +2,22 @@
 
 ## Adding a plugin
 
-The marketplace distributes internal tools by service unit: one plugin per unit, with that unit's skills inside it. A submission must name the unit, its accountable maintainer, and the service it provides across teams. A tool for one team or campaign does not qualify; extend the relevant unit plugin instead.
+One plugin per unit. A unit is a root AOR in the [operating-model registry](https://github.com/apliteni/operating-model/tree/main/aor), including product units (Keitaro, Lessly, Selgeo) and shared services (`people-ops`, `brand`, `compliance`). Name its accountable maintainer and service in the submission. Tools for a single team or campaign belong in the relevant unit plugin or stay outside this marketplace.
 
-The existing `apliteni` entry remains the home for company-wide workflows. The existing product entries `lessly` and `lessly-app-dev` remain listed with their current scope and names. These are explicit exceptions, not a precedent for new team or product entries. A new product entry or a change to these boundaries needs a separate owner-approved change to this policy before admission.
+Use the registry's unit ID as the plugin name: `<unit>@apliteni`, with source repo `apliteni/claude-<unit>-plugin` for shared services or `<product-org>/claude-<unit>-plugin` for product units. Use `people-ops`, not `people`, unless the registry changes. Existing `apliteni` (company workflows) and `lessly-app-dev` are exceptions; retain their names and current scope. Existing repositories stay in place. New exceptions require an owner-approved policy change.
 
-Use the unit's lowercase, hyphen-separated name as the install name: `<unit>@apliteni`, backed by `apliteni/claude-<unit>-plugin` (for example, `compliance@apliteni` and `apliteni/claude-compliance-plugin`). Do not name a unit plugin after a team, campaign, or individual skill. Existing exceptions keep their names and repositories; published names follow the immutable-name rule below.
+Skills live in their owning unit's plugin. Compare purpose, activation conditions, and output with existing unit skills, including those outside this catalog. Extend the owner instead of duplicating its workflow; a distinct boundary needs affected-maintainer agreement in the PR. Renaming a skill does not resolve overlap. Unresolved overlap blocks admission.
 
-Each skill has one owning plugin. Compare proposed skills with the current catalog by purpose, activation conditions, and output, not just filename. Duplicating an existing unit's workflow under a different name does not qualify. Extend its owning plugin, or agree a distinct boundary with the affected maintainer and record it in the PR. Product-specific skills may coexist with unit skills only when that boundary is clear; namespaces alone do not resolve competing instructions. Unresolved overlap blocks admission.
+Open a PR updating `.claude-plugin/marketplace.json`, with the unit, maintainer, skill comparison, agreed boundaries, and evidence of installation and a representative workflow. One approving review from Artur (@asabirov) is required. He checks unit fit, skill ownership, naming, intended users' repository access, installation evidence, and passing CI.
 
-Open a PR updating `.claude-plugin/marketplace.json`. Include the unit and maintainer, audience and service, skill comparison with affected plugins, agreed boundaries, proposed install name and source repo, and evidence that installation and a representative workflow work. CI validates the catalog structure. Admission requires one approving review from the repository owner, Artur (@asabirov), who checks:
-
-- Service-unit fit (or an explicit existing exception) and accountable maintenance.
-- Skill ownership and resolved overlap, with affected maintainer input.
-- Naming, source access for intended users, installation evidence, and passing CI.
-
-A rejection should cite the unmet rule and the path to reconsideration. The team keeps its plugin in its own `apliteni/` repository and maintains access, releases, and installation instructions. It can load a clone directly without a marketplace entry:
+A rejection cites the unmet rule. The team keeps and maintains its `apliteni/` repository and can [load a clone directly](https://code.claude.com/docs/en/plugins#test-your-plugin):
 
 ```bash
 git clone git@github.com:apliteni/claude-gtm-intake-plugin.git
 claude --plugin-dir ./claude-gtm-intake-plugin
 ```
 
-Pass `--plugin-dir` on each launch; update the clone with Git. For managed installation, the team can publish a separate marketplace manifest (`.claude-plugin/marketplace.json`) in its repository, then use `/plugin marketplace add <owner>/<repo>` and `/plugin install <plugin-name>@<marketplace-name>`. The marketplace name comes from that manifest; a plugin manifest alone is insufficient. See Claude Code's [local plugin loading](https://code.claude.com/docs/en/plugins#test-your-plugin) and [marketplace setup](https://code.claude.com/docs/en/plugin-marketplaces) instructions.
-
-Reconsider a rejected submission when it serves a service unit and its skills have an agreed home, or when the owner changes this policy. Rejection from this catalog does not prohibit team use.
+Pass `--plugin-dir` on each launch and update the clone with Git. Reconsider admission when unit ownership and skill boundaries are agreed, or the owner changes this policy; team use can continue meanwhile.
 
 ## Plugin names are immutable
 
