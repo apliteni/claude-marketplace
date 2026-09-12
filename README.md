@@ -33,7 +33,7 @@ If a plugin has been renamed and `/plugin install` says `Repository not found`, 
 
 ## Adding a plugin
 
-Open a PR updating `.claude-plugin/marketplace.json` with a new entry. CI validates the file. One approving review required. See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for naming rules.
+See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for admission criteria, naming, owner approval, and installation outside this marketplace.
 
 ## Telemetry
 
