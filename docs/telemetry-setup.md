@@ -44,7 +44,7 @@ What each phase answers:
 | Secret | Source | What it does |
 |---|---|---|
 | `TRAFFIC_PAT` | 1Password: `Employee/claude-marketplace-pat` (account `apliteni.1password.com`) | Fine-grained PAT with `Administration: Read` on every apliteni-org targeted repo. Used by the daily Action. |
-| `TRAFFIC_PAT_LESSLY` | 1Password: `Employee/claude-marketplace-pat-lessly` | Fine-grained PAT with `Administration: Read` on `lessly-hub/claude-lessly-plugin`. The script dispatches by repo owner: `lessly-hub/*` uses this PAT, everything else uses `TRAFFIC_PAT`. Optional — when unset, the script falls back to `TRAFFIC_PAT` (which 404s for foreign-org repos). |
+| `TRAFFIC_PAT_LESSLY` | 1Password: `Employee/claude-marketplace-pat-lessly` | Fine-grained PAT with `Administration: Read` on `lepsto/claude-lepsto-plugin`. The script dispatches by repo owner: `lepsto/*` uses this PAT, everything else uses `TRAFFIC_PAT`. Optional — when unset, the script falls back to `TRAFFIC_PAT` (which 404s for foreign-org repos). |
 | `POSTHOG_API_KEY` | 1Password: `Employee/posthog-apliteni-project-token` | Project ingest key (`phc_…`). Public-by-design — embedded in the plugin hook script too. |
 | `POSTHOG_HOST` | Plain string `https://eu.posthog.com` | PostHog Cloud EU base URL. |
 
@@ -55,7 +55,7 @@ Set with `gh secret set <NAME> --repo apliteni/claude-marketplace`. Values flow 
 The Action reads the plugin list from `.claude-plugin/marketplace.json` plus the marketplace repo itself. To start tracking a new plugin:
 
 1. Add the plugin entry to `marketplace.json` (the existing CI catches missing fields).
-2. Ensure `TRAFFIC_PAT` (or `TRAFFIC_PAT_LESSLY` for `lessly-hub/*`) has `Administration: Read` on the new repo. For a third org, see [Cross-org repos (multi-PAT)](#cross-org-repos-multi-pat) below.
+2. Ensure `TRAFFIC_PAT` (or `TRAFFIC_PAT_LESSLY` for `lepsto/*`) has `Administration: Read` on the new repo. For a third org, see [Cross-org repos (multi-PAT)](#cross-org-repos-multi-pat) below.
 3. Merge. Next 09:00 UTC cron picks it up. Manual trigger: `gh workflow run "Traffic telemetry" --repo apliteni/claude-marketplace --ref main`.
 
 ## Phase 2 — add the SessionStart hook to a new plugin
@@ -87,11 +87,11 @@ GROUP BY event, plugin
 
 ## Cross-org repos (multi-PAT)
 
-A single fine-grained PAT can only target repos in one GitHub org. Today the script handles two orgs: `apliteni/*` (via `TRAFFIC_PAT`) and `lessly-hub/*` (via `TRAFFIC_PAT_LESSLY`). Dispatch is in `scripts/ingest-traffic.mjs`:
+A single fine-grained PAT can only target repos in one GitHub org. Today the script handles two orgs: `apliteni/*` (via `TRAFFIC_PAT`) and `lepsto/*` (via `TRAFFIC_PAT_LESSLY`). Dispatch is in `scripts/ingest-traffic.mjs`:
 
 ```js
 function patFor(repo) {
-  return repo.startsWith('lessly-hub/') ? TRAFFIC_PAT_LESSLY : TRAFFIC_PAT
+  return repo.startsWith('lepsto/') ? TRAFFIC_PAT_LESSLY : TRAFFIC_PAT
 }
 ```
 
