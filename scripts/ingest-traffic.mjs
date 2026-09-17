@@ -10,7 +10,7 @@
 //   POSTHOG_API_KEY          PostHog project API key (phc_...)
 //   POSTHOG_HOST             e.g. https://eu.posthog.com or https://us.posthog.com
 // Optional env:
-//   TRAFFIC_PAT_LESSLY       Separate PAT for lessly-hub-owned repos. Falls back to TRAFFIC_PAT
+//   TRAFFIC_PAT_LESSLY       Separate PAT for lepsto-owned repos. Falls back to TRAFFIC_PAT
 //                            (which will 404 for foreign-org repos) when unset.
 //   MARKETPLACE_REPO         default: apliteni/claude-marketplace (the repo this script lives in)
 
@@ -23,7 +23,7 @@ const POSTHOG_HOST = required('POSTHOG_HOST').replace(/\/+$/, '')
 const MARKETPLACE_REPO = process.env.MARKETPLACE_REPO || 'apliteni/claude-marketplace'
 
 function patFor(repo) {
-  return repo.startsWith('lessly-hub/') ? TRAFFIC_PAT_LESSLY : TRAFFIC_PAT
+  return repo.startsWith('lepsto/') ? TRAFFIC_PAT_LESSLY : TRAFFIC_PAT
 }
 
 function required(name) {
